@@ -21,6 +21,9 @@ describe Hand do
   let(:three_of_a_kind) {[two_of_h, two_of_d, two_of_c, three_of_h, four_of_s]}
   let(:four_of_a_kind) {[two_of_h, two_of_d, two_of_c, two_of_s, four_of_s]}
   let(:straight) {[three_of_h, four_of_s, five_of_s, six_of_s, seven_of_s]}
+  let(:flush) {[two_of_s, four_of_s, five_of_s, six_of_s, seven_of_s]}
+  let(:full_house) {[two_of_s, two_of_h, two_of_d, three_of_h, three_of_s]}
+  let(:straight_flush) {[three_of_s, four_of_s, five_of_s, six_of_s, seven_of_s]}
 
   describe "#dealt_cards" do
     it "takes 5 cards from deck" do
@@ -60,9 +63,24 @@ describe Hand do
       expect(hand.calculate_hand_value).to eq(5)
     end
 
+    it "returns 6 for a flush" do
+      hand.cards = flush
+      expect(hand.calculate_hand_value).to eq(6)
+    end
+
+    it "returns 7 for a full house" do
+      hand.cards = full_house
+      expect(hand.calculate_hand_value).to eq(7)
+    end
+
     it "returns 8 for four of a kind" do
       hand.cards = four_of_a_kind
       expect(hand.calculate_hand_value).to eq(8)
+    end
+
+    it "returns 9 for straight flush" do
+      hand.cards = straight_flush
+      expect(hand.calculate_hand_value).to eq(9)
     end
   end
 end

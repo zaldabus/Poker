@@ -18,8 +18,10 @@ class Hand
   end
 
   def calculate_hand_value
+    return 9 if straight_flush?
     return 8 if four_of_a_kind?
-
+    return 7 if full_house?
+    return 6 if flush?
     return 5 if straight?
     return 4 if three_of_a_kind?
     return 3 if two_pair?
@@ -30,6 +32,11 @@ class Hand
   def get_card_values
     @cards.map { |card| card.get_integer }
   end
+
+  def get_suit_values
+    @cards.map { |card| card.get_suit }
+  end
+
 
   def card_frequency_calculator(num)
     values = get_card_values
@@ -79,4 +86,17 @@ class Hand
     true
   end
 
+  def flush?
+    suits = get_suit_values
+    suits.uniq.length == 1
+  end
+
+  def full_house?
+    card_frequency_calculator(3) && card_frequency_calculator(2)
+  end
+
+  def straight_flush?
+    return false unless flush? && straight?
+    true
+  end
 end
