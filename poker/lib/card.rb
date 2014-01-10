@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 class Card
   SUIT_STRINGS = {
     :clubs    => "♣",
@@ -56,6 +58,18 @@ class Card
     end
 
     @suit, @value = suit, value
+  end
+
+  def get_value
+    VALUE_STRINGS[value]
+  end
+
+  def get_suit
+    SUIT_STRINGS[suit]
+  end
+
+  def get_integer
+    POKER_VALUE[value]
   end
 
 end
