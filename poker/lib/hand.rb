@@ -8,12 +8,23 @@ class Hand
   def initialize
     @cards = []
   end
-
-  def replace_cards(deck)
-
+  
+  def beats?(opposing_hand)
+    unless calculate_hand_value == opposing_hand.calculate_hand_value
+      calculate_hand_value > opposing_hand.calculate_hand_value
+    else
+      highest_frequency_card_value > opposing_hand.highest_frequency_card_value
+    end 
   end
 
-  def dealt_cards(deck)
+  def replace_cards(deck, *card_replace_choices)
+    num = card_replace_choices.count
+    
+    card_replace_choices.each {|card| @cards.delete_at(card)}
+    @cards.concat(deck.take(num))
+  end
+
+  def deal_cards(deck)
     @cards = deck.take(5)
   end
 
@@ -36,13 +47,23 @@ class Hand
   def get_suit_values
     @cards.map { |card| card.get_suit }
   end
-
-
-  def card_frequency_calculator(num)
+  
+  def get_card_frequency
     values = get_card_values
     card_freqs = Hash.new(0)
-
+    
     values.each {|card| card_freqs[card] += 1}
+    card_freqs
+  end
+  
+  def highest_frequency_card_value
+    card_freqs = get_card_frequency
+    
+    card_freqs.sort_by { |v| card_freqs[card] }.last.get_integer
+  end
+
+  def card_frequency_calculator(num)
+    card_freqs = get_card_frequency
 
     card_freqs.values.any? {|num_of_same_cards| num_of_same_cards == num}
   end
@@ -96,7 +117,6 @@ class Hand
   end
 
   def straight_flush?
-    return false unless flush? && straight?
-    true
+    flush? && straight?
   end
 end

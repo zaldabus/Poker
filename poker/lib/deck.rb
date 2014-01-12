@@ -21,6 +21,9 @@ class Deck
 
     @cards.shuffle!
   end
-
-
+  
+  def take(num)
+    @cards.shift(num)
+  end
+  
 end
