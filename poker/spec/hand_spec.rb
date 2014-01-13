@@ -25,14 +25,14 @@ describe Hand do
   let(:full_house) {[two_of_s, two_of_h, two_of_d, three_of_h, three_of_s]}
   let(:straight_flush) {[three_of_s, four_of_s, five_of_s, six_of_s, seven_of_s]}
 
-  describe "#dealt_cards" do
+  describe "#deal_cards" do
     it "takes 5 cards from deck" do
       deck = double("deck")
       deck_cards = high_card
 
       deck.should_receive(:take).with(5).and_return(deck_cards)
 
-      hand.dealt_cards(deck)
+      hand.deal_cards(deck)
       hand.cards =~ deck_cards
     end
   end
@@ -81,6 +81,49 @@ describe Hand do
     it "returns 9 for straight flush" do
       hand.cards = straight_flush
       expect(hand.calculate_hand_value).to eq(9)
+    end
+  end
+  
+  describe "#beats?" do
+    it "returns true if hand value stronger than opposing hand" do
+      hand2 = double("hand2")
+      
+      hand.should_receive(:calculate_hand_value).and_return(4)
+      hand2.should_receive(:calculate_hand_value).and_return(3)
+      
+      hand.should_receive(:calculate_hand_value).and_return(4)
+      hand2.should_receive(:calculate_hand_value).and_return(3)
+      
+      expect(hand.beats?(hand2)).to be_true
+    end
+    
+    it "returns true if same hand value but higher cards" do
+      hand2 = double("hand2", :cards => pair)
+      hand.cards = [three_of_h, three_of_s, four_of_s, five_of_s, six_of_s]
+      
+      hand.should_receive(:calculate_hand_value).and_return(2)
+      hand2.should_receive(:calculate_hand_value).and_return(2)
+      
+      hand.should_receive(:highest_frequency_card_value).and_return(3)
+      hand2.should_receive(:highest_frequency_card_value).and_return(2)
+      
+      expect(hand.beats?(hand2)).to be_true
+    end
+  end
+  
+  describe "#replace_cards" do
+    it "takes cards from hand and replaces with new cards from deck" do
+      deck = double("deck")
+      hand.cards = pair
+      
+      new_cards = [two_of_d, two_of_s, five_of_s]
+      new_hand = [two_of_h, two_of_s, two_of_d, two_of_s, five_of_s]
+            
+      deck.should_receive(:take).with(3).and_return(new_cards)
+      
+      hand.replace_cards(deck, 2, 3, 4)
+      
+      hand.cards = new_hand
     end
   end
 end

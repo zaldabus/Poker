@@ -71,5 +71,9 @@ class Card
   def get_integer
     POKER_VALUE[value]
   end
+  
+  def to_s
+    "#{VALUE_STRINGS[value]} of #{SUIT_STRINGS[suit]}"
+  end
 
 end

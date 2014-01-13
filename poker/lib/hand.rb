@@ -17,11 +17,9 @@ class Hand
     end 
   end
 
-  def replace_cards(deck, *card_replace_choices)
-    num = card_replace_choices.count
-    
-    card_replace_choices.each {|card| @cards.delete_at(card)}
-    @cards.concat(deck.take(num))
+  def replace_cards(old_cards, new_cards)
+    @cards.delete_if { |card| old_cards.include?(card) }
+    @cards.concat(new_cards)
   end
 
   def deal_cards(deck)

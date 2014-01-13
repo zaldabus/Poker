@@ -26,4 +26,12 @@ class Deck
     @cards.shift(num)
   end
   
+  def shuffle
+    @cards.shuffle
+  end
+  
+  def return(cards)
+    @cards.concat(cards)
+  end
+  
 end

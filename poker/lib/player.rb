@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 require_relative 'hand'
 
 class Player
@@ -18,7 +17,11 @@ class Player
   def discard
     puts "What would you like to discard?"
     user_choice = gets.chomp.split(",").map(&:to_i)
-    user_choice.each { |choice| hand.cards.delete_at(choice) }
+    cards = user_choice.map { |choice| hand.cards[choice - 1] }
+  end
+  
+  def trade_cards(old_cards, new_cards)
+    hand.replace_cards(old_cards, new_cards)
   end
   
   def return_cards
@@ -34,10 +37,6 @@ class Player
   def place_bet
     puts "Would you like to (f)old, (s)ee, or (r)aise?"
     user_choice = gets.chomp.downcase[0]
-    
-    fold if "f"
-    see if "s"
-    bet_raise if "r"
   end
   
   def fold
@@ -52,16 +51,17 @@ class Player
     @over
   end
   
-  def see
-    bankroll -= pot.last
-    pot += pot.last
+  def see(current_amount)
+    self.bankroll -= current_amount
+    self.pot += current_amount
   end
   
   def bet_raise
     puts "How much would you like to raise?"
-    raise_choice = Integer(gets.chomp)
-    bankroll -= raise_choice
-    pot += raise_choice
+    raise_amount = Integer(gets.chomp)
+    self.bankroll -= raise_amount
+    self.pot += raise_amount
+    raise_amount
   end
   
 end
